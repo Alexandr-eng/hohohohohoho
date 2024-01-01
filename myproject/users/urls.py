@@ -5,6 +5,7 @@ router = DefaultRouter()
 router.register('users', UserViewSet)
 router.register('warehouse', WarehouseViewSet)
 router.register('products', ProductViewSet)
+router.register('basket', BasketViewSet)
 
 urlpatterns = []
 
