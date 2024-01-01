@@ -23,7 +23,7 @@ class Warehouse(models.Model):
 
 class Product(models.Model):
     name = models.CharField(max_length=255)
-    warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE)
+    warehouse = models.ForeignKey(Warehouse, related_name='products', on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField()
 
     def __str__(self):
@@ -31,8 +31,8 @@ class Product(models.Model):
 
 
 class Basket(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name='baskets', on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, related_name='baskets', on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=0)
 
     def __str__(self):
