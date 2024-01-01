@@ -7,9 +7,11 @@ from .serializers import UserSerializer, BasketSerializer, WarehouseSerializer, 
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
-    http_method_names = ['get', 'post', 'delete']
+    http_method_names = ['get', 'post']
     serializer_class = UserSerializer
 
+    authentication_classes = []
+    permission_classes = []
 
 class WarehouseViewSet(viewsets.ModelViewSet):
     queryset = Warehouse.objects.all()
