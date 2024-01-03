@@ -23,34 +23,24 @@ class WarehouseViewSet(viewsets.ModelViewSet):
     queryset = Warehouse.objects.all()
     http_method_names = ['get', 'post', 'delete']
     serializer_class = WarehouseSerializer
-    permission_classes = [IsProviderUser]
+    permission_classes = [IsProviderUser,]
 
-    @action(detail=True)
+    @action(detail=True, methods=["GET"])
     def products(self, request, pk=None):
-        warehouse = get_object_or_404(Warehouse.objects.all(), id=pk)
-        free_product = warehouse.products.filter(baskets__isnull=True)
-        return Response(ProductSerializer(free_product, many=True).data)
-
+        warehouse = self.get_object()
+        products = Product.objects.filter(warehouse=warehouse)
+        serializer = ProductSerializer(products, many=True)
+        return Response(serializer.data)
 
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     http_method_names = ['get', 'post', 'delete']
     serializer_class = ProductSerializer
-    permission_classes = [IsProviderUser]
+    permission_classes = [IsProviderUser,]
 
 
 class BasketViewSet(viewsets.ModelViewSet):
     queryset = Basket.objects.all()
     http_method_names = ['get', 'post', 'delete']
     serializer_class = BasketSerializer
-    permission_classes = [IsConsumerUser]
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
-
-    def perform_destroy(self, instance):
-        if instance.user == self.request.user:
-            instance.delete()
-        else:
-            raise PermissionDenied(
-                'У вас нет разрешения на удаление этой корзины')
+    permission_classes = [IsConsumerUser,]
